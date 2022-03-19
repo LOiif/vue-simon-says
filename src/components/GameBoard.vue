@@ -1,30 +1,30 @@
 <template>
-   <div class="board">
-      <div
-          class="board__item board__item_red"
-          :class="{'can-click': canClick}"
-          @click="clickItem"
-          :data-section="1">
-      </div>
-      <div
-          class="board__item board__item_blue"
-          :class="{'can-click': canClick}"
-          @click="clickItem"
-          :data-section="2">
-      </div>
-      <div
-          class="board__item board__item_green"
-          :class="{'can-click': canClick}"
-          @click="clickItem"
-          :data-section="3">
-      </div>
-      <div
-          class="board__item board__item_yellow"
-          :class="{'can-click': canClick}"
-          @click="clickItem"
-          :data-section="4">
-      </div>
+  <div class="board">
+    <div
+        class="board__item board__item_red"
+        :class="{'can-click': canClick}"
+        @click="clickItem"
+        :data-section="1">
     </div>
+    <div
+        class="board__item board__item_blue"
+        :class="{'can-click': canClick}"
+        @click="clickItem"
+        :data-section="2">
+    </div>
+    <div
+        class="board__item board__item_green"
+        :class="{'can-click': canClick}"
+        @click="clickItem"
+        :data-section="3">
+    </div>
+    <div
+        class="board__item board__item_yellow"
+        :class="{'can-click': canClick}"
+        @click="clickItem"
+        :data-section="4">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,13 +33,13 @@ export default {
   methods: {
     clickItem(evt) {
       const sectionNum = evt.target.dataset.section;
-      if(this.canClick){
+      if (this.canClick) {
         this.$emit('click', sectionNum)
       }
     }
   },
   props: {
-    canClick:{
+    canClick: {
       type: Boolean
     }
   }
@@ -162,13 +162,12 @@ export default {
     clip: rect(0px, 225px, 225px, 0px);
   }
 
-  .active{
+  .active {
     opacity: 0.8;
   }
 
-  .board__item_yellow.active{
+  .board__item_yellow.active {
     opacity: 1;
   }
 }
-
 </style>

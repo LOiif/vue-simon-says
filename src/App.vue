@@ -46,7 +46,7 @@ export default {
           if (this.iteration === this.queue.length - 1) {
             this.nextLevel();
           } else {
-            this.iteration += 1
+            this.iteration += 1;
           }
         }
       }
@@ -57,7 +57,6 @@ export default {
       this.nextLevel();
       this.score = 0;
     },
-
     nextLevel() {
       this.canClick = false;
       this.iteration = 0;
@@ -71,7 +70,6 @@ export default {
       })
       this.animate();
     },
-
     endGame() {
       this.resultScore = this.score;
       this.score = 0;
@@ -82,12 +80,10 @@ export default {
       this.elems = [];
       this.isGameOver = true;
     },
-
     restartGame() {
       this.endGame();
       this.startGame();
     },
-
     light(el) {
       console.log(el);
       setTimeout(() => {
@@ -97,7 +93,6 @@ export default {
         el.classList.remove('active');
       }, 400)
     },
-
     animate() {
       let i = 0;
 
@@ -161,7 +156,6 @@ export default {
 
 .start-button:hover {
   background-color: rgba(13, 183, 183, 0.7);
-
 }
 
 .start-button:active {
@@ -190,7 +184,6 @@ export default {
   font-size: 20px;
   text-align: center;
   margin-top: 15px;
-
 }
 
 @media (min-width: 580px) {
@@ -225,5 +218,4 @@ export default {
     margin-bottom: 0;
   }
 }
-
 </style>
