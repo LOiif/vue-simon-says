@@ -4,10 +4,13 @@
       <div class="game__wrapper">
         <h1 class="title">Simon Says</h1>
         <div class="container">
-          <game-board @click="clickBoard"></game-board>
+          <game-board ref="board" :can-click="canClick" @click="clickBoard"></game-board>
           <div class="game-info">
-            <p class="score">Score: {{ score }}</p>
-            <button class="start-button" type="button" v-if="!isGameStart" @click="startGame">Start</button>
+            <p class="score" v-if="!isGameOver">Счет: {{ score }}</p>
+            <p class="game-over" v-if="isGameOver">Игра окончена</p>
+            <p class="total-score" v-if="isGameOver">Набрано очков: {{ resultScore }}</p>
+            <button class="start-button" type="button" v-if="!isGameStart && !isGameOver" @click="startGame">Start
+            </button>
             <button class="start-button" type="button" v-else @click="restartGame">Restart</button>
           </div>
         </div>
@@ -26,19 +29,19 @@ export default {
   components: {GameBoard},
   data: () => ({
     score: 0,
+    iteration: 0,
+    resultScore: 0,
     queue: [],
-    userQueue: [],
+    elems: [],
     isGameStart: false,
-    iteration: 0
+    isGameOver: false,
+    canClick: false,
   }),
   methods: {
-    clickBoard(userClick) {
-
-      if (this.isGameStart) {
-        console.log('iteration: ' + this.iteration)
-        console.log(userClick, this.queue[this.iteration])
-        if (!(+userClick === this.queue[this.iteration])) {
-          this.endGame()
+    clickBoard(clickSection) {
+      if (this.isGameStart && this.canClick) {
+        if (+clickSection !== this.queue[this.iteration]) {
+          this.endGame();
         } else {
           if (this.iteration === this.queue.length - 1) {
             this.nextLevel();
@@ -49,30 +52,66 @@ export default {
       }
     },
     startGame() {
-      this.iteration = 0;
-      this.isGameStart = true
-      this.score = 1;
-      this.queue.push(__.randomNum(4))
-      console.log(this.queue)
+      this.isGameStart = true;
+      this.isGameOver = false;
+      this.nextLevel();
+      this.score = 0;
     },
 
     nextLevel() {
+      this.canClick = false;
       this.iteration = 0;
       this.score++;
-      this.queue.push(__.randomNum(4))
-      console.log(this.queue)
+      const randomNum = __.randomNum(4);
+      this.queue.push(randomNum);
+      const sections = Array.from(this.$refs.board.$el.children);
+      this.elems.push(sections.find(item => +item.dataset.section === +randomNum));
+      sections.forEach(el => {
+        console.log(Number(el.dataset.section), Number(randomNum));
+      })
+      this.animate();
     },
 
     endGame() {
+      this.resultScore = this.score;
       this.score = 0;
       this.queue = [];
       this.iteration = 0;
-      this.isGameStart = false
+      this.isGameStart = false;
+      this.canClick = false;
+      this.elems = [];
+      this.isGameOver = true;
     },
 
     restartGame() {
       this.endGame();
-      this.startGame()
+      this.startGame();
+    },
+
+    light(el) {
+      console.log(el);
+      setTimeout(() => {
+        el.classList.add('active');
+      }, 1)
+      setTimeout(() => {
+        el.classList.remove('active');
+      }, 400)
+    },
+
+    animate() {
+      let i = 0;
+
+      const interval = (setInterval(() => {
+        this.canClick = false;
+        if (this.elems[i]) {
+          this.light(this.elems[i]);
+        }
+        ++i;
+        if (i >= this.queue.length) {
+          clearInterval(interval);
+          this.canClick = true;
+        }
+      }, 600))
     }
   },
 }
@@ -102,21 +141,27 @@ export default {
 }
 
 .game-info {
-  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .start-button {
   width: 120px;
   font-size: 22px;
-  background-color: #02a7a7;
+  background-color: #0db7b7;
   border: none;
   border-radius: 6px;
-  padding: 8px 18px;
+  padding: 10px 18px;
   margin-top: 30px;
+  align-self: center;
+  margin-bottom: 30px;
 }
 
 .start-button:hover {
-  background-color: rgba(2, 167, 167, 0.7);
+  background-color: rgba(13, 183, 183, 0.7);
+
 }
 
 .start-button:active {
@@ -136,21 +181,16 @@ export default {
   padding-top: 40px;
 }
 
-@media (min-width: 880px) {
-  .game__wrapper {
-    width: 800px;
-    padding-left: 0;
-    padding-right: 0;
-  }
+.game-over {
+  font-size: 28px;
+  text-align: center;
+}
 
-  .game-info {
-    align-self: start;
-    margin-left: 120px;
-  }
+.total-score {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 15px;
 
-  .container {
-    flex-direction: row;
-  }
 }
 
 @media (min-width: 580px) {
@@ -158,5 +198,32 @@ export default {
     padding-left: 40px;
     padding-right: 40px;
   }
+
+  .game-info {
+    padding-top: 20px;
+  }
 }
+
+@media (min-width: 780px) {
+  .game__wrapper {
+    width: 700px;
+    padding: 60px 0 0 0;
+  }
+
+  .game-info {
+    align-self: start;
+    padding-top: 20px;
+  }
+
+  .container {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 120px;
+  }
+
+  .start-button {
+    margin-bottom: 0;
+  }
+}
+
 </style>

@@ -1,14 +1,30 @@
 <template>
-  <div class="container">
-    <div class="board">
-
-      <div class="board__item board__item_red" @click="clickItem" :data-section="1">
+   <div class="board">
+      <div
+          class="board__item board__item_red"
+          :class="{'can-click': canClick}"
+          @click="clickItem"
+          :data-section="1">
       </div>
-      <div class="board__item board__item_blue" @click="clickItem" :data-section="2"></div>
-      <div class="board__item board__item_green" @click="clickItem" :data-section="3"></div>
-      <div class="board__item board__item_yellow" @click="clickItem" :data-section="4"></div>
+      <div
+          class="board__item board__item_blue"
+          :class="{'can-click': canClick}"
+          @click="clickItem"
+          :data-section="2">
+      </div>
+      <div
+          class="board__item board__item_green"
+          :class="{'can-click': canClick}"
+          @click="clickItem"
+          :data-section="3">
+      </div>
+      <div
+          class="board__item board__item_yellow"
+          :class="{'can-click': canClick}"
+          @click="clickItem"
+          :data-section="4">
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -17,38 +33,33 @@ export default {
   methods: {
     clickItem(evt) {
       const sectionNum = evt.target.dataset.section;
-
-      this.$emit('click', sectionNum)
+      if(this.canClick){
+        this.$emit('click', sectionNum)
+      }
+    }
+  },
+  props: {
+    canClick:{
+      type: Boolean
     }
   }
 }
 </script>
 
 <style scoped>
-.container {
-
-}
-
 .board {
   position: relative;
   border-radius: 50%;
   background-color: antiquewhite;
   width: 250px;
   height: 250px;
-
-  margin: 0 auto;
-
 }
 
 .board::before, .board::after {
   content: '';
   position: absolute;
-
-
   background-color: #2c3e50;
-
   z-index: 2;
-
 }
 
 .board::before {
@@ -74,7 +85,7 @@ export default {
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .board__item:hover {
@@ -82,8 +93,8 @@ export default {
   border: 3px solid black;
 }
 
-.board__item:active {
-  opacity: 0.7;
+.board__item.can-click:active {
+  opacity: 0.8;
 }
 
 .board__item_red {
@@ -94,7 +105,6 @@ export default {
 .board__item_blue {
   background: blue;
   clip: rect(125px, 250px, 250px, 125px)
-
 }
 
 .board__item_green {
@@ -106,7 +116,6 @@ export default {
   background: #ffd900;
   clip: rect(0px, 125px, 125px, 0px);
 }
-
 
 @media (min-width: 340px) {
   .board {
@@ -151,6 +160,14 @@ export default {
 
   .board__item_yellow {
     clip: rect(0px, 225px, 225px, 0px);
+  }
+
+  .active{
+    opacity: 0.8;
+  }
+
+  .board__item_yellow.active{
+    opacity: 1;
   }
 }
 
