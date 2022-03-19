@@ -34,7 +34,7 @@ export default {
     clickItem(evt) {
       const sectionNum = evt.target.dataset.section;
       if (this.canClick) {
-        this.$emit('click', sectionNum)
+        this.$emit('click', sectionNum);
       }
     }
   },

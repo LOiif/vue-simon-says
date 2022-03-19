@@ -40,14 +40,14 @@ export default {
   methods: {
     clickBoard(clickSection) {
       if (this.isGameStart && this.canClick) {
-        if (+clickSection !== this.queue[this.iteration]) {
-          this.endGame();
-        } else {
+        if (+clickSection === this.queue[this.iteration]) {
           if (this.iteration === this.queue.length - 1) {
             this.nextLevel();
           } else {
-            this.iteration += 1;
+            this.iteration++;
           }
+        } else {
+          this.endGame();
         }
       }
     },
