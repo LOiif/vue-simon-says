@@ -31,7 +31,7 @@ export default {
     score: 0,
     iteration: 0,
     resultScore: 0,
-    sequence: [],
+    sequence: [], // {num, el}
     isGameStart: false,
     isGameOver: false,
     canClick: false,
@@ -39,9 +39,7 @@ export default {
   methods: {
     clickBoard(sectionNum) {
       if (this.isGameStart && this.canClick) {
-
-      this.playSound(sectionNum)
-
+      __.playSound(sectionNum)
         if (+sectionNum === this.sequence[this.iteration].num) {
           if (this.iteration === this.sequence.length - 1) {
             this.nextLevel();
@@ -65,7 +63,7 @@ export default {
       this.score++;
       const randomNum = __.randomNum(4);
       const el = Array.from(this.$refs.board.$el.children).find(item => +item.dataset.section === +randomNum);
-      this.sequence.push({num: randomNum, el});
+      this.sequence.push({ num: randomNum, el });
       this.animate();
     },
     endGame() {
@@ -81,29 +79,13 @@ export default {
       this.endGame();
       this.startGame();
     },
-    light(el) {
-      console.log(el);
-      setTimeout(() => {
-        el.classList.add('active');
-      }, 1)
-      setTimeout(() => {
-        el.classList.remove('active');
-      }, 400)
-    },
 
-    playSound(name) {
-      let path = require(`@/assets/sounds/${name}.wav`)
-      const audio = new Audio(path);
-      audio.play()
-    },
     animate() {
       let i = 0;
-
       const interval = (setInterval(() => {
         this.canClick = false;
-        this.light(this.sequence[i].el);
-        console.log(this.sequence[i].num)
-        this.playSound(this.sequence[i].num);
+        __.lightSections(this.sequence[i].el, 400);
+        __.playSound(this.sequence[i].num);
         ++i;
         if (i >= this.sequence.length) {
           clearInterval(interval);
