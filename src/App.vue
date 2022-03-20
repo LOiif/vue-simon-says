@@ -2,7 +2,7 @@
   <div id="app">
     <div class="game">
       <div class="game__wrapper">
-        <h1 class="title">Simon Says</h1>
+        <h1 class="title">Simon Game</h1>
         <div class="container">
           <game-board ref="board" :can-click="canClick" @click="clickBoard"></game-board>
           <div class="game-info">
