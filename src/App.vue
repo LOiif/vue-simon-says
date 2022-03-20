@@ -31,20 +31,19 @@ export default {
     score: 0,
     iteration: 0,
     resultScore: 0,
-    queue: [],
-    elems: [],
+    sequence: [],
     isGameStart: false,
     isGameOver: false,
     canClick: false,
   }),
   methods: {
-    clickBoard(clickSection) {
+    clickBoard(sectionNum) {
       if (this.isGameStart && this.canClick) {
 
-      this.playSound(clickSection)
+      this.playSound(sectionNum)
 
-        if (+clickSection === this.queue[this.iteration]) {
-          if (this.iteration === this.queue.length - 1) {
+        if (+sectionNum === this.sequence[this.iteration].num) {
+          if (this.iteration === this.sequence.length - 1) {
             this.nextLevel();
           } else {
             this.iteration++;
@@ -65,22 +64,17 @@ export default {
       this.iteration = 0;
       this.score++;
       const randomNum = __.randomNum(4);
-      this.queue.push(randomNum);
-      const sections = Array.from(this.$refs.board.$el.children);
-      this.elems.push(sections.find(item => +item.dataset.section === +randomNum));
-      sections.forEach(el => {
-        console.log(Number(el.dataset.section), Number(randomNum));
-      })
+      const el = Array.from(this.$refs.board.$el.children).find(item => +item.dataset.section === +randomNum);
+      this.sequence.push({num: randomNum, el});
       this.animate();
     },
     endGame() {
       this.resultScore = this.score;
       this.score = 0;
-      this.queue = [];
+      this.sequence = [];
       this.iteration = 0;
       this.isGameStart = false;
       this.canClick = false;
-      this.elems = [];
       this.isGameOver = true;
     },
     restartGame() {
@@ -107,10 +101,11 @@ export default {
 
       const interval = (setInterval(() => {
         this.canClick = false;
-        this.light(this.elems[i]);
-        this.playSound(this.queue[i]);
+        this.light(this.sequence[i].el);
+        console.log(this.sequence[i].num)
+        this.playSound(this.sequence[i].num);
         ++i;
-        if (i >= this.queue.length) {
+        if (i >= this.sequence.length) {
           clearInterval(interval);
           this.canClick = true;
         }
