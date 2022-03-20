@@ -9,9 +9,16 @@
             <p class="score" v-if="!isGameOver">Счет: {{ score }}</p>
             <p class="game-over" v-if="isGameOver">Игра окончена</p>
             <p class="total-score" v-if="isGameOver">Набрано очков: {{ resultScore }}</p>
-            <button class="start-button" type="button" v-if="!isGameStart && !isGameOver" @click="startGame">Start
+            <button class="start-button" type="button" v-if="!isGameStart && !isGameOver" @click="startGame">
+              Start
             </button>
             <button class="start-button" type="button" v-else @click="restartGame">Restart</button>
+            <radio-group class="difficulty"
+                         :title="'Сложность'"
+                         :difficulty-options="difficultyOptions"
+                         :selected-difficulty="selectedDifficulty"
+                         @select="selectDifficulty">
+            </radio-group>
           </div>
         </div>
       </div>
@@ -23,10 +30,12 @@
 
 import GameBoard from "@/components/GameBoard";
 import __ from "@/utils/utils";
+import RadioGroup from "@/components/RadioGroup";
+import {difficultyOptions} from "@/utils/constants"
 
 export default {
   name: 'App',
-  components: {GameBoard},
+  components: {RadioGroup, GameBoard},
   data: () => ({
     score: 0,
     iteration: 0,
@@ -35,11 +44,13 @@ export default {
     isGameStart: false,
     isGameOver: false,
     canClick: false,
+    difficultyOptions,
+    selectedDifficulty: 'easy'
   }),
   methods: {
     clickBoard(sectionNum) {
       if (this.isGameStart && this.canClick) {
-      __.playSound(sectionNum)
+        __.playSound(sectionNum);
         if (+sectionNum === this.sequence[this.iteration].num) {
           if (this.iteration === this.sequence.length - 1) {
             this.nextLevel();
@@ -50,6 +61,9 @@ export default {
           this.endGame();
         }
       }
+    },
+    selectDifficulty(value){
+      this.selectedDifficulty = value;
     },
     startGame() {
       this.isGameStart = true;
@@ -63,7 +77,7 @@ export default {
       this.score++;
       const randomNum = __.randomNum(4);
       const el = Array.from(this.$refs.board.$el.children).find(item => +item.dataset.section === +randomNum);
-      this.sequence.push({ num: randomNum, el });
+      this.sequence.push({num: randomNum, el});
       this.animate();
     },
     endGame() {
@@ -79,19 +93,18 @@ export default {
       this.endGame();
       this.startGame();
     },
-
     animate() {
       let i = 0;
       const interval = (setInterval(() => {
         this.canClick = false;
-        __.lightSections(this.sequence[i].el, 400);
+        __.lightSections(this.sequence[i].el, this.difficultyOptions[this.selectedDifficulty].duration);
         __.playSound(this.sequence[i].num);
         ++i;
         if (i >= this.sequence.length) {
           clearInterval(interval);
           this.canClick = true;
         }
-      }, 600))
+      }, this.difficultyOptions[this.selectedDifficulty].duration + 100))
     }
   },
 }
@@ -140,7 +153,7 @@ export default {
 }
 
 .start-button:hover {
-  background-color: rgba(13, 183, 183, 0.7);
+  background-color: rgba(13, 183, 183, 0.8);
 }
 
 .start-button:active {
@@ -155,7 +168,7 @@ export default {
 
 .container {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   padding-top: 40px;
 }
@@ -169,6 +182,24 @@ export default {
   font-size: 20px;
   text-align: center;
   margin-top: 15px;
+}
+
+.difficulty {
+  margin-top: 40px;
+}
+
+.visually-hidden{
+  border: 0;
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
+  clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
 }
 
 @media (min-width: 580px) {
