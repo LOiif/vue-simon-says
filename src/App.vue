@@ -4,6 +4,7 @@
       <div class="game__wrapper">
         <h1 class="title">Simon Game</h1>
         <div class="container">
+          <button class="sound" @click="muteButtonClickHandler"></button>
           <game-board ref="board" :can-click="canClick" @click="clickBoard"></game-board>
           <div class="game-info">
             <p class="score" v-if="!isGameOver">Счет: {{ score }}</p>
@@ -45,12 +46,15 @@ export default {
     isGameOver: false,
     canClick: false,
     difficultyOptions,
-    selectedDifficulty: 'easy'
+    selectedDifficulty: 'easy',
+    isMute: false
   }),
   methods: {
     clickBoard(sectionNum) {
       if (this.isGameStart && this.canClick) {
-        __.playSound(sectionNum);
+        if (!this.isMute) {
+          __.playSound(sectionNum);
+        }
         if (+sectionNum === this.sequence[this.iteration].num) {
           if (this.iteration === this.sequence.length - 1) {
             this.nextLevel();
@@ -62,8 +66,12 @@ export default {
         }
       }
     },
-    selectDifficulty(value){
+    selectDifficulty(value) {
       this.selectedDifficulty = value;
+    },
+    muteButtonClickHandler(evt) {
+      evt.target.classList.toggle('mute');
+      this.isMute = !this.isMute;
     },
     startGame() {
       this.isGameStart = true;
@@ -98,7 +106,9 @@ export default {
       const interval = (setInterval(() => {
         this.canClick = false;
         __.lightSections(this.sequence[i].el, this.difficultyOptions[this.selectedDifficulty].duration);
-        __.playSound(this.sequence[i].num);
+        if (!this.isMute) {
+          __.playSound(this.sequence[i].num);
+        }
         ++i;
         if (i >= this.sequence.length) {
           clearInterval(interval);
@@ -138,6 +148,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-top: 40px;
 }
 
 .start-button {
@@ -167,10 +178,49 @@ export default {
 }
 
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 60px;
+}
+
+.sound {
+  position: absolute;
+  left: 10px;
+  top: 50px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background-color: transparent;
+  background-image: url("assets/images/sound.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.sound:hover {
+  opacity: 0.8;
+}
+
+.sound:active {
+  opacity: 0.5;
+}
+
+.sound.mute::before {
+  content: '';
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  background-color: transparent;
+  background-image: url("assets/images/cross.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: opacity ease 0.17s;
 }
 
 .game-over {
@@ -185,10 +235,10 @@ export default {
 }
 
 .difficulty {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
-.visually-hidden{
+.visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
   -webkit-clip-path: polygon(0px 0px, 0px 0px, 0px 0px);
@@ -208,8 +258,9 @@ export default {
     padding-right: 40px;
   }
 
-  .game-info {
-    padding-top: 20px;
+  .sound {
+    width: 30px;
+    height: 30px;
   }
 }
 
@@ -232,6 +283,10 @@ export default {
 
   .start-button {
     margin-bottom: 0;
+  }
+
+  .difficulty {
+    margin-top: 40px;
   }
 }
 </style>

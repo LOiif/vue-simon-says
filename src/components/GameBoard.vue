@@ -51,8 +51,8 @@ export default {
   position: relative;
   border-radius: 50%;
   background-color: antiquewhite;
-  width: 85vw;
-  height: 85vw;
+  width: 82vw;
+  height: 82vw;
 }
 
 .board::before, .board::after {
