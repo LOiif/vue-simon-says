@@ -117,6 +117,14 @@ export default {
   clip: rect(0px, 125px, 125px, 0px);
 }
 
+.active {
+  opacity: 0.8;
+}
+
+.board__item_yellow.active {
+  opacity: 1;
+}
+
 @media (min-width: 340px) {
   .board {
     width: 300px;
@@ -160,14 +168,6 @@ export default {
 
   .board__item_yellow {
     clip: rect(0px, 225px, 225px, 0px);
-  }
-
-  .active {
-    opacity: 0.8;
-  }
-
-  .board__item_yellow.active {
-    opacity: 1;
   }
 }
 </style>
