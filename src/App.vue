@@ -40,6 +40,9 @@ export default {
   methods: {
     clickBoard(clickSection) {
       if (this.isGameStart && this.canClick) {
+
+      this.playSound(clickSection)
+
         if (+clickSection === this.queue[this.iteration]) {
           if (this.iteration === this.queue.length - 1) {
             this.nextLevel();
@@ -93,14 +96,19 @@ export default {
         el.classList.remove('active');
       }, 400)
     },
+
+    playSound(name) {
+      let path = require(`@/assets/sounds/${name}.wav`)
+      const audio = new Audio(path);
+      audio.play()
+    },
     animate() {
       let i = 0;
 
       const interval = (setInterval(() => {
         this.canClick = false;
-        if (this.elems[i]) {
-          this.light(this.elems[i]);
-        }
+        this.light(this.elems[i]);
+        this.playSound(this.queue[i]);
         ++i;
         if (i >= this.queue.length) {
           clearInterval(interval);
