@@ -51,8 +51,8 @@ export default {
   position: relative;
   border-radius: 50%;
   background-color: antiquewhite;
-  width: 250px;
-  height: 250px;
+  width: 85vw;
+  height: 85vw;
 }
 
 .board::before, .board::after {
@@ -85,89 +85,74 @@ export default {
   right: 0;
   bottom: 0;
   border-radius: 50%;
-  opacity: 0.4;
+  transition: all ease 0.17s;
 }
 
 .board__item:hover {
-  transform: scale(1.01);
-  border: 3px solid black;
+  transform: scale(1.0107);
+  border: 3px solid rgba(18, 15, 15, 0.6);
 }
 
 .board__item.can-click:active {
-  opacity: 0.8;
+  transition: none;
 }
 
 .board__item_red {
-  background: red;
-  clip: rect(0px, 250px, 125px, 125px);
+  background: rgba(255, 0, 0, 0.3);
+  clip-path: inset(0 0 50% 50%);
+}
+
+.board__item.can-click:active {
+  background: rgba(255, 0, 0, 0.9);
+}
+
+.board__item_red.active {
+  background: rgba(255, 0, 0, 0.9);
 }
 
 .board__item_blue {
-  background: blue;
-  clip: rect(125px, 250px, 250px, 125px)
+  background: rgba(0, 0, 255, 0.3);
+  clip-path: inset(50% 0 0 50%);
+}
+
+.board__item_blue.can-click:active {
+  background: rgba(0, 0, 255, 0.9);
+}
+
+.board__item_blue.active {
+  background: rgba(0, 0, 255, 0.9);
 }
 
 .board__item_green {
-  background: green;
-  clip: rect(125px, 125px, 250px, 0px);
+  background: rgba(1, 255, 1, 0.3);
+  clip-path: inset(0 50% 50% 0);
+}
+
+.board__item_green.can-click:active {
+  background: rgba(4, 188, 4, 0.9);
+}
+
+.board__item_green.active {
+  background: rgba(4, 188, 4, 0.9);
 }
 
 .board__item_yellow {
-  background: #ffd900;
-  clip: rect(0px, 125px, 125px, 0px);
+  background: rgba(255, 225, 0, 0.25);
+  clip-path: inset(50% 50% 0 0);
 }
 
-.active {
-  opacity: 0.8;
+.board__item_yellow.can-click:active {
+  background: rgb(255, 225, 1);
 }
 
 .board__item_yellow.active {
-  opacity: 1;
-}
-
-@media (min-width: 340px) {
-  .board {
-    width: 300px;
-    height: 300px;
-  }
-
-  .board__item_red {
-    clip: rect(0px, 300px, 150px, 150px);
-  }
-
-  .board__item_blue {
-    clip: rect(150px, 300px, 300px, 150px)
-  }
-
-  .board__item_green {
-    clip: rect(150px, 150px, 300px, 0px);
-  }
-
-  .board__item_yellow {
-    clip: rect(0px, 150px, 150px, 0px);
-  }
+  background: rgb(255, 225, 0.9);
 }
 
 @media (min-width: 540px) {
   .board {
     width: 450px;
     height: 450px;
-  }
-
-  .board__item_red {
-    clip: rect(0px, 450px, 225px, 225px);
-  }
-
-  .board__item_blue {
-    clip: rect(225px, 450px, 450px, 225px)
-  }
-
-  .board__item_green {
-    clip: rect(225px, 225px, 450px, 0px);
-  }
-
-  .board__item_yellow {
-    clip: rect(0px, 225px, 225px, 0px);
   }
 }
 </style>
