@@ -187,7 +187,7 @@ export default {
 
 .sound {
   position: absolute;
-  left: 10px;
+  right: 20px;
   top: 50px;
   width: 24px;
   height: 24px;
@@ -261,6 +261,7 @@ export default {
   .sound {
     width: 30px;
     height: 30px;
+    right: 60px;
   }
 }
 
